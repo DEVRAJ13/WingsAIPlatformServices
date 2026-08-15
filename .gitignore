@@ -1,23 +1,247 @@
-# Python
-__pycache__/
-*.py[cod]
+# ============================================================
+# WINGS AI PLATFORM
+# Git Ignore
+# ============================================================
 
-# Virtual environment
-.venv/
 
-# Environment variables
+# ============================================================
+# TERRAFORM
+# ============================================================
+
+.terraform/
+.terraform.lock.hcl
+
+terraform.tfstate
+terraform.tfstate.*
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+crash.log
+crash.*.log
+
+
+# Terraform plans
+*.tfplan
+*.tfplan.json
+terraform.plan
+
+
+# Terraform variables / secrets
+terraform.tfvars
+*.tfvars
+*.tfvars.json
+
+!terraform.tfvars.example
+
+
+# ============================================================
+# OCI CREDENTIALS
+# ============================================================
+
+*.pem
+*.key
+*.p12
+*.pfx
+
+.oci/
+oci_api_key*
+oci_api_key.pem
+
+
+# ============================================================
+# ENVIRONMENT / SECRETS
+# ============================================================
+
 .env
 .env.*
+!.env.example
 
+*.secret
+secrets/
+credentials/
+
+
+# ============================================================
+# PYTHON / FASTAPI
+# ============================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.so
+
+.Python
+
+.venv/
+venv/
+env/
+ENV/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.coverage
+.coverage.*
+htmlcov/
+
+.pyre/
+
+.ipynb_checkpoints/
+
+
+# ============================================================
+# NODE / REACT
+# ============================================================
+
+node_modules/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.npm/
+
+dist/
+build/
+coverage/
+
+.vite/
+
+.parcel-cache/
+
+.next/
+out/
+
+.eslintcache
+
+
+# ============================================================
 # IDE
+# ============================================================
+
 .vscode/
+
 .idea/
 
-# OS
+*.iml
+
+*.swp
+*.swo
+
+*.swn
+
 .DS_Store
 
-# Test
-.pytest_cache/
 
-# Logs
+# ============================================================
+# LOGS
+# ============================================================
+
 *.log
+logs/
+
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+
+# ============================================================
+# DOCKER
+# ============================================================
+
+docker-compose.override.yml
+
+docker-compose.local.yml
+
+*.docker.env
+
+.docker/
+
+
+# ============================================================
+# DATABASE / LOCAL DATA
+# ============================================================
+
+postgres_data/
+pgdata/
+
+redis_data/
+
+ollama_data/
+
+pgadmin_data/
+
+*.db
+*.sqlite
+*.sqlite3
+
+
+# ============================================================
+# GENERATED / TEMPORARY FILES
+# ============================================================
+
+tmp/
+temp/
+.cache/
+.cache-loader/
+
+*.tmp
+*.temp
+
+*.bak
+*.backup
+
+*.orig
+
+
+# ============================================================
+# TEST / REPORT OUTPUT
+# ============================================================
+
+test-results/
+playwright-report/
+reports/
+
+*.xml
+
+
+# ============================================================
+# OS FILES
+# ============================================================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+Icon
+._*
+
+.Spotlight-V100
+.Trashes
+
+
+# ============================================================
+# BACKUP FILES
+# ============================================================
+
+*.old
+*.save
+*.swp
+*.swo
+
+
+# ============================================================
+# SECURITY
+# ============================================================
+
+*.crt
+*.csr
+
+*.token
+*.jwt
+
+private/
