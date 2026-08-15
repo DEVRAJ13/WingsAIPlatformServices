@@ -8,7 +8,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
 class Settings(BaseSettings):
     app_name: str = "WINGS AI Platform"
+    app_env: str = "development"
     app_version: str = "1.0.0"
+    debug: bool = True
 
     database_url: str
 
