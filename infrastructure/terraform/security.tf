@@ -61,6 +61,41 @@ resource "oci_core_security_list" "wings" {
 
 
   # ============================================================
+  # FASTAPI - TEMPORARY TESTING
+  # ============================================================
+
+  ingress_security_rules {
+    protocol = "6"
+
+    source = var.ssh_source_cidr
+
+    tcp_options {
+      min = 8000
+      max = 8000
+    }
+
+    description = "FastAPI temporary access"
+  }
+
+
+  # ============================================================
+  # PGADMIN - TEMPORARY ADMIN ACCESS
+  # ============================================================
+
+  ingress_security_rules {
+    protocol = "6"
+
+    source = var.ssh_source_cidr
+
+    tcp_options {
+      min = 5050
+      max = 5050
+    }
+
+    description = "pgAdmin temporary access"
+  }
+
+  # ============================================================
   # OUTBOUND
   # ============================================================
 
@@ -75,3 +110,5 @@ resource "oci_core_security_list" "wings" {
 
   freeform_tags = local.common_tags
 }
+
+
