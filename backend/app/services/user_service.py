@@ -1,5 +1,6 @@
 from fastapi import HTTPException, status
 
+from app.core.security import hash_password, verify_password
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate, UserUpdate
@@ -25,11 +26,38 @@ class UserService:
         user = User(
             name=data.name,
             email=data.email,
-            password_hash=data.password,
+            password_hash=hash_password(data.password),
             role=data.role,
         )
 
         return await self.repository.create(user)
+
+    async def authenticate_user(
+        self,
+        email: str,
+        password: str,
+    ) -> User:
+
+        user = await self.repository.get_by_email(email)
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        if not verify_password(
+            password,
+            user.password_hash,
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        return user
 
     async def get_user(self, user_id: int) -> User:
 
