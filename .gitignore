@@ -20,12 +20,10 @@ terraform.tfstate.*
 crash.log
 crash.*.log
 
-
 # Terraform plans
 *.tfplan
 *.tfplan.json
 terraform.plan
-
 
 # Terraform variables / secrets
 terraform.tfvars
@@ -43,10 +41,22 @@ terraform.tfvars
 *.key
 *.p12
 *.pfx
+*.ppk
 
 .oci/
 oci_api_key*
 oci_api_key.pem
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+*.pub
+
+# SSH configuration / local credentials
+.ssh/
 
 
 # ============================================================
@@ -57,9 +67,23 @@ oci_api_key.pem
 .env.*
 !.env.example
 
+# Environment files in sub-projects
+**/.env
+**/.env.*
+!**/.env.example
+
 *.secret
+*.secrets
 secrets/
 credentials/
+
+*.credentials
+*.password
+*.passwd
+
+# Local configuration
+config.local.*
+settings.local.*
 
 
 # ============================================================
@@ -67,6 +91,8 @@ credentials/
 # ============================================================
 
 __pycache__/
+**/__pycache__/
+
 *.py[cod]
 *$py.class
 
@@ -82,21 +108,47 @@ ENV/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.pyre/
+.pytype/
 
 .coverage
 .coverage.*
 htmlcov/
 
-.pyre/
+.tox/
+.nox/
 
 .ipynb_checkpoints/
 
+*.egg-info/
+dist/
+build/
+
+pip-wheel-metadata/
+
+.pytest_cache/
+
 
 # ============================================================
-# NODE / REACT
+# PYTHON PACKAGING
+# ============================================================
+
+*.whl
+*.egg
+
+MANIFEST
+MANIFEST.in
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+
+# ============================================================
+# NODE / REACT / VITE
 # ============================================================
 
 node_modules/
+**/node_modules/
 
 npm-debug.log*
 yarn-debug.log*
@@ -104,49 +156,52 @@ yarn-error.log*
 pnpm-debug.log*
 
 .npm/
+.pnpm-store/
 
+# Build output
 dist/
+**/dist/
+
 build/
+**/build/
+
 coverage/
+**/coverage/
 
+# Vite
 .vite/
+**/.vite/
 
+# React / Next.js
+.next/
+**/.next/
+
+out/
+**/out/
+
+# Parcel
 .parcel-cache/
 
-.next/
-out/
+# Turborepo
+.turbo/
 
+# ESLint
 .eslintcache
 
+# TypeScript
+*.tsbuildinfo
 
-# ============================================================
-# IDE
-# ============================================================
+# Storybook
+storybook-static/
 
-.vscode/
+# Testing
+playwright-report/
+test-results/
+blob-report/
 
-.idea/
-
-*.iml
-
-*.swp
-*.swo
-
-*.swn
-
-.DS_Store
-
-
-# ============================================================
-# LOGS
-# ============================================================
-
-*.log
-logs/
-
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
+# Cypress
+cypress/videos/
+cypress/screenshots/
 
 
 # ============================================================
@@ -154,12 +209,15 @@ pnpm-debug.log*
 # ============================================================
 
 docker-compose.override.yml
-
 docker-compose.local.yml
 
 *.docker.env
 
 .docker/
+
+# Docker build/cache files
+docker-cache/
+docker-build/
 
 
 # ============================================================
@@ -170,14 +228,76 @@ postgres_data/
 pgdata/
 
 redis_data/
+redis_data/
 
 ollama_data/
-
 pgadmin_data/
 
+mongodb_data/
+mysql_data/
+
+# Local database files
 *.db
 *.sqlite
 *.sqlite3
+
+# Database dumps
+*.sql.gz
+*.dump
+*.bak.sql
+
+
+# ============================================================
+# OLLAMA / LOCAL LLM
+# ============================================================
+
+# Ollama model data should never enter Git
+.ollama/
+ollama/
+ollama_data/
+
+# Local model files
+*.gguf
+*.ggml
+*.safetensors
+
+# Embedding/model caches
+models/
+model_cache/
+model-cache/
+
+# Hugging Face cache
+.huggingface/
+.cache/huggingface/
+
+# ML caches
+.cache/
+.cache-loader/
+
+
+# ============================================================
+# AI / RAG DATA
+# ============================================================
+
+vector_data/
+vector_store/
+vector_db/
+
+chroma/
+chromadb/
+
+faiss_index/
+faiss_indexes/
+
+embeddings/
+embedding_cache/
+
+rag_data/
+rag_cache/
+
+# Local AI experiments
+ai_cache/
+llm_cache/
 
 
 # ============================================================
@@ -186,16 +306,40 @@ pgadmin_data/
 
 tmp/
 temp/
-.cache/
-.cache-loader/
 
 *.tmp
 *.temp
 
 *.bak
 *.backup
-
 *.orig
+*.old
+*.save
+
+*.swp
+*.swo
+*.swn
+
+*.retry
+
+
+# ============================================================
+# LOGS
+# ============================================================
+
+*.log
+logs/
+
+**/logs/
+
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+uvicorn.log
+gunicorn.log
+
+docker.log
 
 
 # ============================================================
@@ -207,6 +351,65 @@ playwright-report/
 reports/
 
 *.xml
+*.html
+
+coverage/
+htmlcov/
+
+.pytest_cache/
+
+
+# ============================================================
+# SECURITY
+# ============================================================
+
+*.crt
+*.csr
+
+*.token
+*.jwt
+*.pem
+*.key
+
+*.private
+*.secret
+*.secrets
+
+private/
+secrets/
+credentials/
+
+# Certificates / local TLS
+certs/
+certificates/
+
+# Local security/config files
+*.credentials
+*.password
+*.passwd
+
+
+# ============================================================
+# IDE / EDITORS
+# ============================================================
+
+.vscode/
+.idea/
+
+*.iml
+
+*.swp
+*.swo
+*.swn
+
+*.code-workspace
+
+# VS Code local settings
+.history/
+
+# JetBrains
+*.iws
+*.ipr
 
 
 # ============================================================
@@ -223,6 +426,9 @@ Icon
 .Spotlight-V100
 .Trashes
 
+Thumbs.db
+Desktop.ini
+
 
 # ============================================================
 # BACKUP FILES
@@ -232,16 +438,126 @@ Icon
 *.save
 *.swp
 *.swo
+*.bak
+*.backup
+*.orig
 
 
 # ============================================================
-# SECURITY
+# LOCAL DEVELOPMENT
 # ============================================================
 
-*.crt
-*.csr
+.local/
+.local.*
+*.local
 
-*.token
-*.jwt
+# Keep examples
+!.env.example
+!.env.*.example
 
-private/
+# Local overrides
+docker-compose.override.yml
+docker-compose.local.yml
+
+
+# ============================================================
+# FRONTEND LOCAL CONFIG
+# ============================================================
+
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Vite local environment
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+
+# ============================================================
+# BACKEND LOCAL CONFIG
+# ============================================================
+
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+
+# ============================================================
+# API / GENERATED FILES
+# ============================================================
+
+openapi.json
+swagger.json
+
+*.generated.*
+generated/
+
+
+# ============================================================
+# CELERY / WORKERS
+# ============================================================
+
+celerybeat-schedule
+celerybeat.pid
+
+
+# ============================================================
+# PYTHON SERVER
+# ============================================================
+
+*.pid
+*.sock
+
+gunicorn.pid
+uvicorn.pid
+
+
+# ============================================================
+# MAC / LINUX LOCAL FILES
+# ============================================================
+
+.Trashes
+.fseventsd
+
+*.DS_Store
+
+
+# ============================================================
+# WINGS LOCAL DEVELOPMENT DATA
+# ============================================================
+
+.wings/
+wings_data/
+wings_cache/
+
+.local-data/
+runtime/
+storage/
+uploads/
+
+
+# ============================================================
+# NEVER COMMIT THESE
+# ============================================================
+
+# Private keys
+*.pem
+*.key
+*.ppk
+
+# Password files
+password.txt
+passwords.txt
+
+# Secret files
+secret.txt
+secrets.txt
+
+# Local env
+.env
+.env.local
+.env.production
+.env.development
+.env.test

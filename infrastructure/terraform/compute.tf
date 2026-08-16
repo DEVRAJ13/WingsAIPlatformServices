@@ -75,7 +75,7 @@ resource "oci_core_instance" "wings" {
   # SAFETY
   # ============================================================
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  # prevent_destroy = true
+  # }
 }

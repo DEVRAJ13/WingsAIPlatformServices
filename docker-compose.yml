@@ -69,8 +69,39 @@ services:
         condition: service_healthy
 
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: wings-ollama
+    restart: unless-stopped
+
+    volumes:
+      - ollama_data:/root/.ollama
+
+    networks:
+      - wings-network
+
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+
+    container_name: wings-frontend
+    restart: unless-stopped
+
+    ports:
+      - "3000:80"
+
+    networks:
+      - wings-network
+
+    depends_on:
+      - backend
+
+
 volumes:
   postgres_data:
+  ollama_data:
 
 
 networks:
