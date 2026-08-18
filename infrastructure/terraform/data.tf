@@ -11,3 +11,5 @@ data "oci_core_images" "ubuntu_arm64" {
 
   sort_order = "DESC"
 }
+
+data "oci_core_services" "all" {}
