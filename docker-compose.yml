@@ -20,11 +20,10 @@ services:
     networks:
       - wings-network
 
-    # Resource limit for OCI Always Free target
+    # Local development
     mem_limit: 1g
-    cpus: "0.4"
+    cpus: "0.5"
 
-    # PostgreSQL memory tuning for small VM
     command:
       - postgres
       - -c
@@ -52,14 +51,6 @@ services:
 
   # =========================================================
   # PGADMIN
-  #
-  # Optional admin service.
-  #
-  # Normal startup:
-  #   docker compose up -d
-  #
-  # Start pgAdmin only when needed:
-  #   docker compose --profile admin up -d pgadmin
   # =========================================================
 
   pgadmin:
@@ -84,13 +75,20 @@ services:
       postgres:
         condition: service_healthy
 
-    # Keep pgAdmin lightweight
     mem_limit: 512m
     cpus: "0.2"
 
 
   # =========================================================
   # OLLAMA
+  #
+  # LOCAL DEVELOPMENT LLM
+  #
+  # MODEL:
+  # qwen2.5:1.5b
+  #
+  # Backend:
+  # http://ollama:11434
   # =========================================================
 
   ollama:
@@ -104,18 +102,20 @@ services:
     networks:
       - wings-network
 
-    # Do not expose Ollama publicly.
-    # Backend accesses it internally using:
-    # http://ollama:11434
-
     environment:
-      OLLAMA_KEEP_ALIVE: "5m"
+      OLLAMA_KEEP_ALIVE: "10m"
       OLLAMA_NUM_PARALLEL: "1"
       OLLAMA_MAX_LOADED_MODELS: "1"
 
-    # OCI Always Free target
+    # =======================================================
+    # LOCAL MAC DEVELOPMENT
+    #
+    # Your Mac has 8 CPUs.
+    # Give Ollama 4 CPUs so local inference is responsive.
+    # =======================================================
+
     mem_limit: 5g
-    cpus: "1.0"
+    cpus: "4.0"
 
     healthcheck:
       test:
@@ -144,6 +144,27 @@ services:
     env_file:
       - .env
 
+    environment:
+
+      # =====================================================
+      # AI / OLLAMA
+      # =====================================================
+
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: qwen2.5:1.5b
+
+      # Local development safety timeout.
+      OLLAMA_TIMEOUT_SECONDS: "120"
+
+      # Keep prompts small for the 1.5B model.
+      AI_MAX_PROMPT_LENGTH: "4000"
+
+      # Small responses = faster inference.
+      AI_MAX_OUTPUT_TOKENS: "128"
+
+      # Deterministic enterprise responses.
+      AI_TEMPERATURE: "0.1"
+
     ports:
       - "8000:8000"
 
@@ -157,9 +178,8 @@ services:
       ollama:
         condition: service_healthy
 
-    # OCI Always Free target
     mem_limit: 768m
-    cpus: "0.4"
+    cpus: "0.5"
 
 
   # =========================================================
@@ -184,7 +204,6 @@ services:
       backend:
         condition: service_started
 
-    # OCI Always Free target
     mem_limit: 256m
     cpus: "0.2"
 
