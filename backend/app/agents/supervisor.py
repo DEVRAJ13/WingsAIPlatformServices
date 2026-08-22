@@ -3,23 +3,38 @@ from app.agents.state import AgentState
 
 KNOWLEDGE_KEYWORDS = (
     "what is",
+    "what are",
+    "what should",
     "explain",
     "how does",
+    "how do",
+    "why",
     "policy",
     "procedure",
     "guide",
     "documentation",
     "document",
+    "process",
+    "meaning",
+    "definition",
 )
 
+
 INCIDENT_KEYWORDS = (
-    "incident",
-    "error",
-    "failure",
-    "outage",
-    "down",
-    "not working",
+    "diagnose incident",
+    "diagnosis of incident",
+    "investigate incident",
+    "investigate the incident",
+    "incident id",
+    "incident_id",
+    "incident number",
+    "incident status",
+    "incident details",
+    "troubleshoot incident",
+    "analyze incident",
+    "analyse incident",
 )
+
 
 ITSM_KEYWORDS = (
     "ticket",
@@ -34,20 +49,61 @@ ITSM_KEYWORDS = (
 def classify_intent(question: str) -> str:
     text = question.lower().strip()
 
-    if any(keyword in text for keyword in ITSM_KEYWORDS):
+    if not text:
+        return "knowledge"
+
+    # ---------------------------------------------------------
+    # ITSM
+    # ---------------------------------------------------------
+
+    if any(
+        keyword in text
+        for keyword in ITSM_KEYWORDS
+    ):
         return "itsm"
 
-    if any(keyword in text for keyword in INCIDENT_KEYWORDS):
+    # ---------------------------------------------------------
+    # SPECIFIC INCIDENT OPERATIONS
+    #
+    # Do NOT classify every question containing "incident"
+    # as an incident workflow.
+    # ---------------------------------------------------------
+
+    if any(
+        keyword in text
+        for keyword in INCIDENT_KEYWORDS
+    ):
         return "incident"
 
-    if any(keyword in text for keyword in KNOWLEDGE_KEYWORDS):
+    # ---------------------------------------------------------
+    # GENERAL KNOWLEDGE
+    # ---------------------------------------------------------
+
+    if any(
+        keyword in text
+        for keyword in KNOWLEDGE_KEYWORDS
+    ):
         return "knowledge"
+
+    # ---------------------------------------------------------
+    # GENERAL QUESTIONS
+    #
+    # If there is no explicit operational intent,
+    # safely default to knowledge.
+    # ---------------------------------------------------------
 
     return "knowledge"
 
 
-def supervisor(state: AgentState) -> AgentState:
-    intent = classify_intent(state["question"])
+def supervisor(
+    state: AgentState,
+) -> AgentState:
+    question = state.get(
+        "question",
+        "",
+    )
+
+    intent = classify_intent(question)
 
     return {
         **state,
