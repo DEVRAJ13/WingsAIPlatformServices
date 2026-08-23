@@ -2,14 +2,14 @@
 
 An AI-powered platform built with a lightweight, production-oriented architecture using **FastAPI, LangGraph, Ollama, Qwen3 4B, PostgreSQL + pgvector, and React**.
 
+<img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 13 57 AM" src="https://github.com/user-attachments/assets/e03889a1-afd1-40ca-9b5a-4af2a06f1463" />
 <img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 17 33 AM" src="https://github.com/user-attachments/assets/dd8ac4a3-c70e-4b9c-8145-f3aaa6101129" />
 <img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 17 17 AM" src="https://github.com/user-attachments/assets/23dd16ed-b292-46a3-bc2a-0a5a3f652dc3" />
 <img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 15 52 AM" src="https://github.com/user-attachments/assets/6c48dffa-c90f-4ce5-8a34-f16cf47fe7b2" />
 <img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 15 29 AM" src="https://github.com/user-attachments/assets/a3cecc26-f5e3-4988-bbaa-3785513d3dd8" />
 <img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 15 17 AM" src="https://github.com/user-attachments/assets/6733b8fd-706f-49ec-8255-fa22ed613958" />
 <img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 14 59 AM" src="https://github.com/user-attachments/assets/d2502185-3741-4b13-93b1-fa840bb5553b" />
-<img width="1438" height="727" alt="Screenshot 2026-08-23 at 7 13 57 AM" src="https://github.com/user-attachments/assets/e03889a1-afd1-40ca-9b5a-4af2a06f1463" />
-<img width="1440" height="900" alt="Screenshot 2026-08-23 at 5 56 23 AM" src="https://github.com/user-attachments/assets/ed01a286-b148-4645-b591-48bc5e1b401c" />
+
 
 
 The platform is designed to run on **OCI Always Free infrastructure** while supporting **RAG, ReAct agents, tool calling, and multi-step AI workflows**.
