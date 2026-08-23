@@ -1,4 +1,72 @@
-import {NavLink} from "react-router-dom";
-import {Activity,Bot,BookOpen,CheckCircle2,FileText,LayoutDashboard,Settings,ShieldCheck,X,ChevronRight} from "lucide-react";
-const items=[["/dashboard","Dashboard",LayoutDashboard],["/ai","AI Console",Bot],["/incidents","Incidents",Activity],["/approvals","Approvals",CheckCircle2],["/knowledge","Knowledge",BookOpen],["/documents","Documents",FileText]];
-export default function Sidebar({mobileOpen,onClose}){return <aside className={`sidebar ${mobileOpen?"sidebar-open":""}`}><div className="brand"><div className="brand-mark"><ShieldCheck size={22}/></div><div><strong>WINGS AI</strong><span>Operations Platform</span></div><button className="mobile-close" onClick={onClose}><X size={19}/></button></div><div className="sidebar-section">Workspace</div><nav>{items.map(([to,label,Icon])=><NavLink key={to} to={to} onClick={onClose} className={({isActive})=>`nav-item ${isActive?"active":""}`}><Icon size={18}/><span>{label}</span><ChevronRight size={14} className="nav-chevron"/></NavLink>)}</nav><div className="sidebar-spacer"/><div className="sidebar-section">System</div><NavLink to="/settings" onClick={onClose} className={({isActive})=>`nav-item ${isActive?"active":""}`}><Settings size={18}/><span>Settings</span><ChevronRight size={14} className="nav-chevron"/></NavLink><div className="sidebar-status"><span className="status-dot"/><div><strong>Platform online</strong><small>Core services connected</small></div></div></aside>}
+import { NavLink } from "react-router-dom";
+import {
+  Activity,
+  Bot,
+  BookOpen,
+  CheckCircle2,
+  FileText,
+  LayoutDashboard,
+  Settings,
+  ShieldCheck,
+  X,
+  ChevronRight,
+} from "lucide-react";
+const items = [
+  ["/dashboard", "Dashboard", LayoutDashboard],
+  ["/ai", "AI Console", Bot],
+  ["/incidents", "Incidents", Activity],
+  ["/approvals", "Approvals", CheckCircle2],
+  ["/knowledge", "Knowledge", BookOpen],
+  ["/documents", "Documents", FileText],
+];
+export default function Sidebar({ mobileOpen, onClose }) {
+  return (
+    <aside className={`sidebar ${mobileOpen ? "sidebar-open" : ""}`}>
+      <div className="brand">
+        <div className="brand-mark">
+          <ShieldCheck size={22} />
+        </div>
+        <div>
+          <strong>WINGS AI</strong>
+          <span>Operations Platform</span>
+        </div>
+        <button className="mobile-close" onClick={onClose}>
+          <X size={19} />
+        </button>
+      </div>
+      <div className="sidebar-section">Workspace</div>
+      <nav>
+        {items.map(([to, label, Icon]) => (
+          <NavLink
+            key={to}
+            to={to}
+            onClick={onClose}
+            className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+          >
+            <Icon size={18} />
+            <span>{label}</span>
+            <ChevronRight size={14} className="nav-chevron" />
+          </NavLink>
+        ))}
+      </nav>
+      <div className="sidebar-spacer" />
+      <div className="sidebar-section">System</div>
+      <NavLink
+        to="/settings"
+        onClick={onClose}
+        className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+      >
+        <Settings size={18} />
+        <span>Settings</span>
+        <ChevronRight size={14} className="nav-chevron" />
+      </NavLink>
+      <div className="sidebar-status">
+        <span className="status-dot" />
+        <div>
+          <strong>Platform online</strong>
+          <small>Core services connected</small>
+        </div>
+      </div>
+    </aside>
+  );
+}
