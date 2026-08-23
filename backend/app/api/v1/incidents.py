@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_db
@@ -7,9 +8,21 @@ from app.schemas.incident import (
     IncidentResponse,
 )
 from app.services.incident_service import IncidentService
+from app.models.incident import Incident
 
 
 router = APIRouter()
+
+
+@router.get("")
+async def list_incidents(
+    current_user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> list[IncidentResponse]:
+    result = await db.execute(
+        select(Incident).order_by(Incident.id.desc()).limit(100)
+    )
+    return list(result.scalars().all())
 
 
 @router.post(

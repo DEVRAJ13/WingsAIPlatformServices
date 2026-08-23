@@ -21,7 +21,7 @@ class CreateITSMTicketTool(BaseTool):
     async def execute(
         self,
         *,
-        provider: str,
+        provider: str = "jira",
         title: str,
         description: str,
         priority: str,

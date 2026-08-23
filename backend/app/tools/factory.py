@@ -31,10 +31,6 @@ def build_tool_registry(
     )
 
     registry.register(
-    CreateITSMTicketTool()
-)
-
-    registry.register(
         GetITSMTicketTool()
     )
 

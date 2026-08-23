@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.health import router as health_router
 from app.api.v1.ai import router as ai_router
@@ -14,14 +15,23 @@ from app.api.v1.documents import router as documents_router
 from app.api.v1.incidents import router as incidents_router
 from app.api.v1.rag import router as rag_router
 from app.api.v1.users import router as users_router
+from app.api.routes.users import router as users_crud_router
 from app.db.init_db import init_db
 
+
+# =========================================================
+# APPLICATION LIFESPAN
+# =========================================================
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
     yield
 
+
+# =========================================================
+# FASTAPI APPLICATION
+# =========================================================
 
 app = FastAPI(
     title="WINGS AI Platform",
@@ -32,7 +42,34 @@ app = FastAPI(
 
 
 # =========================================================
-# ROUTERS
+# CORS
+# =========================================================
+#
+# React/Vite frontend:
+#   http://localhost:5173
+#
+# Also allow:
+#   http://127.0.0.1:5173
+#
+# This is required for browser requests such as:
+#   POST /api/v1/auth/login
+#
+# =========================================================
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# =========================================================
+# AUTHENTICATION
 # =========================================================
 
 app.include_router(
@@ -41,6 +78,11 @@ app.include_router(
     tags=["Authentication"],
 )
 
+
+# =========================================================
+# USERS
+# =========================================================
+
 app.include_router(
     users_router,
     prefix="/api/v1/users",
@@ -48,10 +90,26 @@ app.include_router(
 )
 
 app.include_router(
+    users_crud_router,
+    prefix="/api/v1/users",
+    tags=["Users"],
+)
+
+
+# =========================================================
+# AI
+# =========================================================
+
+app.include_router(
     ai_router,
     prefix="/api/v1/ai",
     tags=["AI"],
 )
+
+
+# =========================================================
+# RAG
+# =========================================================
 
 app.include_router(
     rag_router,
@@ -59,11 +117,21 @@ app.include_router(
     tags=["AI / RAG"],
 )
 
+
+# =========================================================
+# AI AGENTS
+# =========================================================
+
 app.include_router(
     agent_router,
     prefix="/api/v1/ai/agent",
     tags=["AI Agents"],
 )
+
+
+# =========================================================
+# INCIDENTS
+# =========================================================
 
 app.include_router(
     incidents_router,
@@ -71,11 +139,21 @@ app.include_router(
     tags=["Incidents"],
 )
 
+
+# =========================================================
+# APPROVALS
+# =========================================================
+
 app.include_router(
     approvals_router,
     prefix="/api/v1",
     tags=["Approvals"],
 )
+
+
+# =========================================================
+# APPROVAL EXECUTION
+# =========================================================
 
 app.include_router(
     approval_execution_router,
@@ -83,11 +161,21 @@ app.include_router(
     tags=["Approval Execution"],
 )
 
+
+# =========================================================
+# DOCUMENTS / KNOWLEDGE
+# =========================================================
+
 app.include_router(
     documents_router,
     prefix="/api/v1",
     tags=["Documents"],
 )
+
+
+# =========================================================
+# HEALTH
+# =========================================================
 
 app.include_router(
     health_router,

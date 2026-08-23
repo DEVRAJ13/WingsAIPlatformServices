@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+import json
+from sqlalchemy import select
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_db
 from app.models.user import User
+from app.models.approval_request import ApprovalRequest
 from app.services.approval_service import ApprovalService
 
 
@@ -37,6 +40,37 @@ class ApprovalDecisionRequest(BaseModel):
         default=None,
         max_length=2000,
     )
+
+
+@router.get("")
+async def list_approvals(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    result = await db.execute(
+        select(ApprovalRequest)
+        .order_by(ApprovalRequest.id.desc())
+        .limit(100)
+    )
+    approvals = result.scalars().all()
+    return {
+        "success": True,
+        "approvals": [
+            {
+                "id": item.id,
+                "tool_name": item.tool_name,
+                "status": item.status,
+                "reason": item.reason,
+                "parameters": json.loads(item.parameters or "{}"),
+                "requested_by": item.requested_by,
+                "decision_by": item.decision_by,
+                "decision_comment": item.decision_comment,
+                "created_at": item.created_at,
+                "decided_at": item.decided_at,
+            }
+            for item in approvals
+        ],
+    }
 
 
 @router.post(
