@@ -32,6 +32,7 @@ class IncidentDiagnosisService:
         service_name: str | None,
         environment: str | None,
         created_by: int | None,
+        knowledge_context: str = "",
     ) -> dict:
 
         prompt = f"""
@@ -91,6 +92,9 @@ SERVICE:
 
 ENVIRONMENT:
 {environment or "UNKNOWN"}
+
+RELEVANT KNOWLEDGE BASE CONTEXT:
+{knowledge_context or "No additional knowledge-base context was retrieved."}
 """
         raw_response = await self.llm.generate(prompt)
 
@@ -105,7 +109,12 @@ ENVIRONMENT:
                 "likely_causes": [],
                 "recommended_actions": [],
                 "requires_human_approval": True,
+                "itsm_recommendation": {"should_create_ticket": False, "provider": "none"},
             }
+
+        recommendation = result.get("itsm_recommendation") or {"should_create_ticket": False, "provider": "none"}
+        if not isinstance(recommendation, dict):
+            recommendation = {"should_create_ticket": False, "provider": "none"}
 
         diagnosis = {
             "severity": result.get(
@@ -128,10 +137,8 @@ ENVIRONMENT:
                 "recommended_actions",
                 [],
             ),
-            "requires_human_approval": result.get(
-                "requires_human_approval",
-                True,
-            ),
+            "requires_human_approval": result.get("requires_human_approval", True),
+            "itsm_recommendation": recommendation,
         }
 
         # Persist AI diagnosis for audit/history.

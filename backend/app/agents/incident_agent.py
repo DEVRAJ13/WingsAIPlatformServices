@@ -1,9 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agents.state import AgentState
-from app.services.incident_diagnosis_service import (
-    IncidentDiagnosisService,
-)
+from app.services.incident_diagnosis_service import IncidentDiagnosisService
+from app.services.vector_search_service import VectorSearchService
 from app.tools.factory import build_tool_registry
 
 
@@ -82,8 +81,25 @@ async def incident_agent(
         }
 
     # ---------------------------------------------------------
-    # AI DIAGNOSIS
+    # RAG + AI DIAGNOSIS
     # ---------------------------------------------------------
+
+    # Retrieve enterprise knowledge as supporting evidence. RAG failure is
+    # non-fatal: diagnosis can still proceed using incident data alone.
+    knowledge_results = []
+    try:
+        search = VectorSearchService(db)
+        knowledge_results = await search.search(
+            query=f"{incident.get("title", "")} {incident.get("description", "")}".strip(),
+            limit=3,
+        )
+    except Exception:
+        knowledge_results = []
+
+    knowledge_context = "\n\n".join(
+        f"SOURCE {index}: {item.get("content", "")}"
+        for index, item in enumerate(knowledge_results, start=1)
+    )
 
     diagnosis_service = IncidentDiagnosisService(
         db
@@ -105,9 +121,8 @@ async def incident_agent(
         environment=incident.get(
             "environment"
         ),
-        created_by=state.get(
-            "user_id"
-        ),
+        created_by=state.get("user_id"),
+        knowledge_context=knowledge_context,
     )
 
     # ---------------------------------------------------------
@@ -180,6 +195,16 @@ async def incident_agent(
                 "type": "incident",
                 "incident_id": incident["id"],
                 "tool": "get_incident",
-            }
+            },
+            *[
+                {
+                    "type": "document",
+                    "document_id": item.get("document_id"),
+                    "document_title": item.get("document_title"),
+                    "chunk_id": item.get("chunk_id"),
+                    "similarity": item.get("similarity"),
+                }
+                for item in knowledge_results
+            ],
         ],
     }

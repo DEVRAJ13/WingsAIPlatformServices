@@ -4,6 +4,7 @@ from typing import Any
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.services.approval_service import ApprovalService
+from app.core.rbac import can_execute
 from app.services.audit_service import AuditService
 from app.tools.factory import build_tool_registry
 
@@ -13,6 +14,10 @@ class ToolExecutionService:
 
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
+
+    async def _get_user(self, user_id: int):
+        from app.repositories.user_repository import UserRepository
+        return await UserRepository(self.db).get_by_id(user_id)
 
     async def execute_approved(
         self,
@@ -30,6 +35,16 @@ class ToolExecutionService:
         # expire ORM attributes after rollback.
         approval_tool_name = approval.tool_name
         approval_status = approval.status
+        approval_requested_by = approval.requested_by
+        approval_decision_by = approval.decision_by
+
+        if not can_execute(await self._get_user(executed_by)):
+            raise PermissionError("Your role is not authorized to execute operational actions.")
+
+        if executed_by == approval_requested_by:
+            raise PermissionError("The requester cannot execute their own approved action.")
+        if approval_decision_by is not None and executed_by == approval_decision_by:
+            raise PermissionError("The approver cannot execute the action they approved.")
 
         if approval_status == "EXECUTED":
             raise ValueError("Approval request has already been executed.")

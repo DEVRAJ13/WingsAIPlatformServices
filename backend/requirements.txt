@@ -27,3 +27,4 @@ httpx
 pgvector==0.4.2
 langgraph
 langchain-core
+pytest==8.4.2

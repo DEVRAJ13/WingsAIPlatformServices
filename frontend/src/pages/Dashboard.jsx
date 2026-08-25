@@ -13,16 +13,33 @@ import StatCard from "../components/common/StatCard";
 import Badge from "../components/common/Badge";
 import { listIncidents } from "../api/incidents";
 import { listApprovals } from "../api/approvals";
+import { getCurrentUser } from "../api/auth";
 export default function Dashboard() {
   const [incidents, setIncidents] = useState([]),
     [approvals, setApprovals] = useState([]),
+    [user, setUser] = useState(() => {
+      try {
+        return JSON.parse(localStorage.getItem("wings_user") || "null");
+      } catch {
+        return null;
+      }
+    }),
     [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
       try {
-        const [i, a] = await Promise.all([listIncidents(), listApprovals()]);
+        const [i, a, currentUser] = await Promise.all([
+          listIncidents(),
+          listApprovals(),
+          getCurrentUser().catch(() => null),
+        ]);
         setIncidents(Array.isArray(i) ? i : i.incidents || []);
         setApprovals(Array.isArray(a) ? a : a.approvals || []);
+        if (currentUser) {
+          const normalizedUser = currentUser.user || currentUser.data || currentUser;
+          setUser(normalizedUser);
+          localStorage.setItem("wings_user", JSON.stringify(normalizedUser));
+        }
       } finally {
         setLoading(false);
       }
@@ -30,6 +47,11 @@ export default function Dashboard() {
   }, []);
   const open = incidents.filter((x) => x.status !== "RESOLVED").length;
   const pending = approvals.filter((x) => x.status === "PENDING").length;
+  const firstName = String(user?.name || user?.email || "User")
+    .trim()
+    .split(/\s+/)[0] || "User";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   return (
     <div className="page-stack">
       <section className="hero-panel">
@@ -37,7 +59,7 @@ export default function Dashboard() {
           <div className="eyebrow">
             <span className="pulse" /> PLATFORM READY
           </div>
-          <h1>Good evening, DevRaj.</h1>
+          <h1>{greeting}, {firstName}.</h1>
           <p>
             Use WINGS AI to understand incidents, search enterprise knowledge,
             and safely execute approved operational actions.

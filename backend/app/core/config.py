@@ -18,7 +18,9 @@ class Settings(BaseSettings):
 
     app_version: str = "1.0.0"
 
-    debug: bool = True
+    debug: bool = False
+
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
 
     # =========================================================
     # DATABASE
@@ -35,6 +37,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
 
     jwt_access_token_expire_minutes: int = 30
+
+    # Existing account to promote to the first Platform Administrator.
+    rbac_bootstrap_admin_email: str | None = None
 
     # =========================================================
     # AI / OLLAMA

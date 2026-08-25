@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   X,
   ChevronRight,
+  Users,
 } from "lucide-react";
 const items = [
   ["/dashboard", "Dashboard", LayoutDashboard],
@@ -20,6 +21,9 @@ const items = [
   ["/documents", "Documents", FileText],
 ];
 export default function Sidebar({ mobileOpen, onClose }) {
+  const user = JSON.parse(localStorage.getItem("wings_user") || "null");
+  const role = String(user?.role || "REQUESTER").toUpperCase();
+  const canManageUsers = role === "PLATFORM_ADMIN" || role === "ADMIN";
   return (
     <aside className={`sidebar ${mobileOpen ? "sidebar-open" : ""}`}>
       <div className="brand">
@@ -49,6 +53,16 @@ export default function Sidebar({ mobileOpen, onClose }) {
           </NavLink>
         ))}
       </nav>
+      {canManageUsers && (
+        <>
+          <div className="sidebar-section">Administration</div>
+          <NavLink to="/admin/users" onClick={onClose} className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            <Users size={18} />
+            <span>User Management</span>
+            <ChevronRight size={14} className="nav-chevron" />
+          </NavLink>
+        </>
+      )}
       <div className="sidebar-spacer" />
       <div className="sidebar-section">System</div>
       <NavLink

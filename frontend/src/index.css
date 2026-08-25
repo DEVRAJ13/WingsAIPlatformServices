@@ -1798,3 +1798,14 @@ a {
         max-width: 90%
     }
 }
+/* User administration additions - preserve existing WINGS visual language. */
+.two-column-grid { display:grid; grid-template-columns:minmax(300px, 0.9fr) minmax(420px, 1.4fr); gap:18px; }
+.table-row { display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); }
+.table-row > div:first-child strong, .table-row > div:first-child span { display:block; }
+.table-row > div:first-child span { color:var(--muted); font-size:12px; margin-top:3px; }
+.row-actions { display:flex; gap:6px; }
+.secondary-btn { border:1px solid var(--border); background:transparent; color:#cbd8e8; border-radius:8px; padding:8px 12px; }
+.success-box { padding:11px 13px; border:1px solid #2b8064; background:#0d2b25; color:#8de3c2; border-radius:9px; font-size:13px; }
+.warning-box { padding:11px 13px; border:1px solid #8b6a2d; background:#302510; color:#f4cd76; border-radius:9px; font-size:13px; }
+.form-stack select { width:100%; border:1px solid var(--border); background:#081321; color:#e8eef7; border-radius:8px; padding:10px 11px; outline:none; }
+@media (max-width: 900px) { .two-column-grid { grid-template-columns:1fr; } .table-row { grid-template-columns:1fr auto; } .row-actions { grid-column:1 / -1; } }

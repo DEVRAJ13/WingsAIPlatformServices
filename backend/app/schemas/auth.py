@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field
+from app.schemas.user import UserResponse
 
 
 class LoginRequest(BaseModel):
@@ -9,3 +10,5 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    user: UserResponse
+    must_change_password: bool = False

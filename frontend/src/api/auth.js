@@ -14,3 +14,8 @@ export async function getCurrentUser() {
   const { data } = await api.get("/users/me");
   return data;
 }
+
+export async function changePassword(current_password, new_password) {
+  const { data } = await api.post("/auth/change-password", { current_password, new_password });
+  return data;
+}

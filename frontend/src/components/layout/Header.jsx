@@ -7,8 +7,10 @@ const titles = {
   "/knowledge": ["Knowledge", "Search the WINGS knowledge base"],
   "/documents": ["Documents", "Manage enterprise knowledge"],
   "/settings": ["Settings", "Platform preferences and account"],
+  "/admin/users": ["User Management", "Enterprise accounts, roles and access"],
 };
 export default function Header({ path, onMenu, onLogout }) {
+  const user = JSON.parse(localStorage.getItem("wings_user") || "null");
   const [title, subtitle] = titles[path] || [
     "WINGS AI",
     "Enterprise AI operations",
@@ -33,8 +35,8 @@ export default function Header({ path, onMenu, onLogout }) {
         <button className="user-menu" onClick={onLogout}>
           <span className="avatar">DT</span>
           <span className="user-copy">
-            <strong>DevRaj</strong>
-            <small>Engineer</small>
+            <strong>{user?.name || user?.email || "WINGS User"}</strong>
+            <small>{user?.role || "REQUESTER"}</small>
           </span>
         </button>
       </div>

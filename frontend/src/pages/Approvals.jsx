@@ -11,6 +11,8 @@ function normalize(item) {
     tool: a.tool_name || a.tool || "unknown",
     reason: a.reason || "",
     status: String(a.status || "PENDING").toUpperCase(),
+    canDecide: Boolean(a.can_decide),
+    canExecute: Boolean(a.can_execute),
   };
 }
 
@@ -57,7 +59,7 @@ export default function Approvals(){
     {error&&<div className="error-box">{error}</div>}
     <div className="panel table-panel">
       {items.length===0&&!error&&<div className="empty-mini"><ShieldCheck size={24}/><strong>No approval requests</strong><span>New AI-recommended actions will appear here.</span></div>}
-      {items.map(a=><div className="approval-row" key={a.id}><div className="approval-id">#{a.id}</div><div className="approval-info"><strong>{a.tool}</strong><span>{a.reason}</span><small>Approval request</small></div><Badge tone={a.status==="APPROVED"||a.status==="EXECUTED"?"success":a.status==="REJECTED"?"danger":"pending"}>{a.status}</Badge><div className="approval-actions">{a.status==="PENDING"&&<><button disabled={!!busy} className="approve-btn" onClick={()=>decide(a.id,"APPROVED")}>{busy===`${a.id}:APPROVED`?<Loader2 className="spin" size={15}/>:<CheckCircle2 size={15}/>} Approve</button><button disabled={!!busy} className="reject-btn" onClick={()=>decide(a.id,"REJECTED")}>{busy===`${a.id}:REJECTED`?<Loader2 className="spin" size={15}/>:<XCircle size={15}/>} Reject</button></>}{a.status==="APPROVED"&&<button disabled={!!busy} className="approve-btn" onClick={()=>execute(a.id)}>{busy===`${a.id}:EXECUTE`?<Loader2 className="spin" size={15}/>:<Play size={15}/>} Execute</button>}</div></div>)}
+      {items.map(a=><div className="approval-row" key={a.id}><div className="approval-id">#{a.id}</div><div className="approval-info"><strong>{a.tool}</strong><span>{a.reason}</span><small>Approval request</small></div><Badge tone={a.status==="APPROVED"||a.status==="EXECUTED"?"success":a.status==="REJECTED"?"danger":"pending"}>{a.status}</Badge><div className="approval-actions">{a.status==="PENDING"&&a.canDecide&&<><button disabled={!!busy} className="approve-btn" onClick={()=>decide(a.id,"APPROVED")}>{busy===`${a.id}:APPROVED`?<Loader2 className="spin" size={15}/>:<CheckCircle2 size={15}/>} Approve</button><button disabled={!!busy} className="reject-btn" onClick={()=>decide(a.id,"REJECTED")}>{busy===`${a.id}:REJECTED`?<Loader2 className="spin" size={15}/>:<XCircle size={15}/>} Reject</button></>}{a.status==="APPROVED"&&a.canExecute&&<button disabled={!!busy} className="approve-btn" onClick={()=>execute(a.id)}>{busy===`${a.id}:EXECUTE`?<Loader2 className="spin" size={15}/>:<Play size={15}/>} Execute</button>}</div></div>)}
     </div>
     <div className="panel"><div className="panel-head"><div><h2>Safety principles</h2><p>WINGS separates recommendation from execution.</p></div></div><div className="principles">{["AI recommends","Human approves","Tool executes","Audit records"].map((x,i)=><div key={x}><strong>0{i+1}</strong><span>{x}</span></div>)}</div></div>
   </div>

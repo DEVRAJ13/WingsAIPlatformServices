@@ -4,7 +4,7 @@ import { ShieldCheck, Eye, EyeOff, Sparkles } from "lucide-react";
 import { login, getCurrentUser } from "../api/auth";
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("developer@wings.ai"),
+  const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [show, setShow] = useState(false),
     [loading, setLoading] = useState(false),
@@ -19,13 +19,17 @@ export default function Login() {
       if (!token)
         throw new Error("Login response did not contain an access token.");
       localStorage.setItem("wings_access_token", token);
-      try {
-        const user = await getCurrentUser();
-        localStorage.setItem("wings_user", JSON.stringify(user));
-      } catch {
-        localStorage.setItem("wings_user", JSON.stringify({ email }));
+      if (data.user) {
+        localStorage.setItem("wings_user", JSON.stringify(data.user));
+      } else {
+        try {
+          const user = await getCurrentUser();
+          localStorage.setItem("wings_user", JSON.stringify(user));
+        } catch {
+          localStorage.setItem("wings_user", JSON.stringify({ email }));
+        }
       }
-      navigate("/dashboard", { replace: true });
+      navigate(data.must_change_password ? "/settings?changePassword=1" : "/dashboard", { replace: true });
     } catch (err) {
       setError(
         err.response?.data?.detail || err.message || "Unable to sign in.",

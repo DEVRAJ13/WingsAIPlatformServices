@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agents.graph import build_agent_graph
@@ -30,9 +30,12 @@ async def agent_query(
         "incident_id": request.incident_id,
     }
 
-    result = await graph.ainvoke(
-        initial_state
-    )
+    try:
+        result = await graph.ainvoke(initial_state)
+    except (RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="AI agent service is temporarily unavailable.") from exc
 
     return AgentQueryResponse(
         answer=result.get("answer", ""),

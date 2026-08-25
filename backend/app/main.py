@@ -17,6 +17,8 @@ from app.api.v1.rag import router as rag_router
 from app.api.v1.users import router as users_router
 from app.api.routes.users import router as users_crud_router
 from app.db.init_db import init_db
+from app.core.config import settings
+from app.db.database import engine
 
 
 # =========================================================
@@ -27,6 +29,7 @@ from app.db.init_db import init_db
 async def lifespan(app: FastAPI):
     await init_db()
     yield
+    await engine.dispose()
 
 
 # =========================================================
@@ -58,10 +61,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=[origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -91,8 +91,8 @@ app.include_router(
 
 app.include_router(
     users_crud_router,
-    prefix="/api/v1/users",
-    tags=["Users"],
+    prefix="/api/v1",
+    tags=["User Administration"],
 )
 
 

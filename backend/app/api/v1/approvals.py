@@ -8,6 +8,7 @@ from app.api.dependencies import get_current_user, get_db
 from app.models.user import User
 from app.models.approval_request import ApprovalRequest
 from app.services.approval_service import ApprovalService
+from app.core.rbac import can_approve, can_execute
 
 
 router = APIRouter(
@@ -67,6 +68,8 @@ async def list_approvals(
                 "decision_comment": item.decision_comment,
                 "created_at": item.created_at,
                 "decided_at": item.decided_at,
+                "can_decide": can_approve(current_user) and item.status == "PENDING" and item.requested_by != current_user.id,
+                "can_execute": can_execute(current_user) and item.status == "APPROVED" and item.requested_by != current_user.id and item.decision_by != current_user.id,
             }
             for item in approvals
         ],
@@ -101,11 +104,10 @@ async def create_ai_approval(
             "approval": approval,
         }
 
+    except PermissionError as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc)) from exc
     except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(exc),
-        ) from exc
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
 
 @router.post(
@@ -125,6 +127,7 @@ async def decide_approval(
             decision=request.decision.upper(),
             decision_by=current_user.id,
             decision_comment=request.decision_comment,
+            decision_user=current_user,
         )
 
         return {
