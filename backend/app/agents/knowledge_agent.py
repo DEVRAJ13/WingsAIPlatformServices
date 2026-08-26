@@ -136,10 +136,15 @@ ANSWER:
     # GENERATE ANSWER
     # ---------------------------------------------------------
 
-    llm = LLMService()
+    llm = LLMService(db)
 
     try:
-        answer = await llm.generate(prompt)
+        answer = await llm.generate(
+            prompt,
+            workflow_id=state.get("workflow_id"),
+            user_id=state.get("user_id"),
+            agent_name="knowledge_agent",
+        )
     except Exception:
         return {
             **state,

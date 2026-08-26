@@ -59,6 +59,7 @@ async def list_approvals(
         "approvals": [
             {
                 "id": item.id,
+                "workflow_id": item.workflow_id,
                 "tool_name": item.tool_name,
                 "status": item.status,
                 "reason": item.reason,

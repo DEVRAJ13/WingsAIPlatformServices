@@ -11,6 +11,7 @@ import {
   X,
   ChevronRight,
   Users,
+  BarChart3,
 } from "lucide-react";
 const items = [
   ["/dashboard", "Dashboard", LayoutDashboard],
@@ -24,6 +25,7 @@ export default function Sidebar({ mobileOpen, onClose }) {
   const user = JSON.parse(localStorage.getItem("wings_user") || "null");
   const role = String(user?.role || "REQUESTER").toUpperCase();
   const canManageUsers = role === "PLATFORM_ADMIN" || role === "ADMIN";
+  const canMonitor = ["PLATFORM_ADMIN", "ADMIN", "IT_MANAGER", "AUDITOR"].includes(role);
   return (
     <aside className={`sidebar ${mobileOpen ? "sidebar-open" : ""}`}>
       <div className="brand">
@@ -59,6 +61,16 @@ export default function Sidebar({ mobileOpen, onClose }) {
           <NavLink to="/admin/users" onClick={onClose} className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
             <Users size={18} />
             <span>User Management</span>
+            <ChevronRight size={14} className="nav-chevron" />
+          </NavLink>
+        </>
+      )}
+      {canMonitor && (
+        <>
+          <div className="sidebar-section">Observability</div>
+          <NavLink to="/monitoring" onClick={onClose} className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+            <BarChart3 size={18} />
+            <span>Monitoring</span>
             <ChevronRight size={14} className="nav-chevron" />
           </NavLink>
         </>

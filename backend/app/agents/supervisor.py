@@ -108,4 +108,5 @@ def supervisor(
     return {
         **state,
         "intent": intent,
+        "next_node": intent,
     }

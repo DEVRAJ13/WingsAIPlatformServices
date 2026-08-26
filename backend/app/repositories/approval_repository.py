@@ -21,12 +21,14 @@ class ApprovalRepository:
         tool_name: str,
         requested_by: int,
         reason: str,
+        workflow_id: str | None = None,
         parameters: dict,
     ) -> ApprovalRequest:
 
         approval = ApprovalRequest(
             tool_name=tool_name,
             requested_by=requested_by,
+            workflow_id=workflow_id,
             status="PENDING",
             reason=reason,
             parameters=json.dumps(parameters),

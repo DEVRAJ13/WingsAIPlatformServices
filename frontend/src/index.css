@@ -1809,3 +1809,283 @@ a {
 .warning-box { padding:11px 13px; border:1px solid #8b6a2d; background:#302510; color:#f4cd76; border-radius:9px; font-size:13px; }
 .form-stack select { width:100%; border:1px solid var(--border); background:#081321; color:#e8eef7; border-radius:8px; padding:10px 11px; outline:none; }
 @media (max-width: 900px) { .two-column-grid { grid-template-columns:1fr; } .table-row { grid-template-columns:1fr auto; } .row-actions { grid-column:1 / -1; } }
+
+
+/* =========================================================
+   WINGS AGENTIC MONITORING
+   ========================================================= */
+.monitoring-grid {
+    display: grid;
+    grid-template-columns: 1.4fr .8fr;
+    gap: 18px
+}
+.monitoring-panel {
+    overflow: hidden
+}
+.monitoring-header {
+    align-items: center
+}
+.health-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 13px
+}
+.health-card {
+    min-height: 68px;
+    padding: 11px;
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 9px;
+    align-items: center;
+    border: 1px solid #173049;
+    background: #091726;
+    border-radius: 9px
+}
+.health-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: #112d4a;
+    color: #70a7ff
+}
+.health-card strong,
+.health-card span,
+.health-card small {
+    display: block
+}
+.health-card strong {
+    font-size: 10px
+}
+.health-card span {
+    color: #647b93;
+    font-size: 8px;
+    margin-top: 3px
+}
+.health-meta {
+    text-align: right
+}
+.health-meta small {
+    color: #5c7189;
+    margin-top: 4px;
+    font-size: 7px
+}
+.usage-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 14px
+}
+.usage-card {
+    border: 1px solid #173049;
+    background: #0a1726;
+    padding: 12px;
+    border-radius: 9px
+}
+.usage-card span,
+.usage-card strong {
+    display: block
+}
+.usage-card span {
+    color: #627992;
+    font-size: 8px
+}
+.usage-card strong {
+    font-size: 16px;
+    margin-top: 5px
+}
+.agent-health-list {
+    padding: 6px 12px
+}
+.agent-health-row {
+    display: grid;
+    grid-template-columns: 1.4fr .8fr .7fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 11px 6px;
+    border-bottom: 1px solid #14263a;
+    font-size: 9px
+}
+.agent-name {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+.agent-name strong,
+.agent-name small {
+    display: block
+}
+.agent-name strong {
+    font-size: 10px
+}
+.agent-name small {
+    color: #60758d;
+    font-size: 8px;
+    margin-top: 2px
+}
+.agent-health-row>span:not(.badge) {
+    color: #91a4b7
+}
+.workflow-list {
+    padding: 6px 12px
+}
+.workflow-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.3fr auto .8fr 20px;
+    gap: 12px;
+    align-items: center;
+    text-align: left;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #14263a;
+    padding: 12px 6px
+}
+.workflow-row:hover {
+    background: #0b1b2c
+}
+.workflow-main strong,
+.workflow-main span {
+    display: block
+}
+.workflow-main strong {
+    font-size: 10px;
+    color: #6fa5ff
+}
+.workflow-main span {
+    font-size: 9px;
+    color: #7489a0;
+    margin-top: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+.workflow-node {
+    color: #8ea3b8;
+    font-size: 8px;
+}
+.workflow-detail-summary {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid #14263a;
+    font-size: 9px;
+    color: #758ba1
+}
+.workflow-trace {
+    padding: 17px 24px 20px;
+    background: #081321
+}
+.trace-step {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    min-height: 54px
+}
+.trace-marker {
+    width: 24px;
+    height: 24px;
+    flex: none;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    z-index: 2
+}
+.trace-success {
+    background: #12362c;
+    color: #5bdfaf
+}
+.trace-failed {
+    background: #3a1f27;
+    color: #ff8994
+}
+.trace-running {
+    background: #3a2c11;
+    color: #f4c663
+}
+.trace-content {
+    flex: 1;
+    min-width: 0
+}
+.trace-title {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center
+}
+.trace-title strong {
+    font-size: 10px
+}
+.trace-content>span {
+    display: block;
+    color: #607891;
+    font-size: 8px;
+    margin-top: 4px
+}
+.trace-error {
+    display: block;
+    color: #ff8994;
+    font-size: 8px;
+    margin-top: 4px
+}
+.trace-line {
+    position: absolute;
+    left: 11px;
+    top: 24px;
+    bottom: -10px;
+    width: 1px;
+    background: #244059;
+    z-index: 1
+}
+.workflow-usage {
+    border-top: 1px solid #14263a;
+    padding: 14px 18px
+}
+.workflow-usage h3 {
+    margin: 0 0 9px;
+    font-size: 10px
+}
+.usage-row {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(4, .7fr);
+    gap: 8px;
+    padding: 9px 0;
+    border-bottom: 1px solid #14263a;
+    color: #8ba0b4;
+    font-size: 8px
+}
+.usage-row strong {
+    color: #d6e1ec;
+    font-size: 9px
+}
+.workflow-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    border: 1px solid #193554;
+    background: #0a1a2a;
+    color: #6e93bd;
+    padding: 7px 9px;
+    border-radius: 7px;
+    font-size: 8px
+}
+.workflow-chip strong {
+    color: #77aaf2
+}
+@media (max-width: 1000px) {
+    .monitoring-grid { grid-template-columns: 1fr }
+    .health-grid { grid-template-columns: 1fr }
+}
+@media (max-width: 700px) {
+    .agent-health-row { grid-template-columns: 1fr 1fr }
+    .workflow-row { grid-template-columns: 1fr auto }
+    .workflow-node { display: none }
+    .usage-row { grid-template-columns: 1.2fr 1fr 1fr }
+}

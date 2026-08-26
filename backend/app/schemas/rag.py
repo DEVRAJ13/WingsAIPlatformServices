@@ -35,5 +35,9 @@ class AgentQueryResponse(BaseModel):
     intent: str
     sources: list[dict]
     diagnosis: dict | None = None
+    workflow_id: str | None = None
+    approval_id: int | None = None
+    workflow_status: str = "COMPLETED"
+
 
     

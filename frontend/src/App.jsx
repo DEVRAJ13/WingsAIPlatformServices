@@ -10,6 +10,7 @@ import Knowledge from "./pages/Knowledge";
 import Documents from "./pages/Documents";
 import Settings from "./pages/Settings";
 import UserManagement from "./pages/UserManagement";
+import Monitoring from "./pages/Monitoring";
 
 function Protected({ children }) {
   return localStorage.getItem("wings_access_token") ? children : <Navigate to="/login" replace />;
@@ -22,6 +23,13 @@ function PasswordGate({ children }) {
     return <Navigate to="/settings?changePassword=1" replace />;
   }
   return children;
+}
+
+function MonitoringAccess({ children }) {
+  const user = JSON.parse(localStorage.getItem("wings_user") || "null");
+  const role = String(user?.role || "REQUESTER").toUpperCase();
+  const allowed = ["PLATFORM_ADMIN", "ADMIN", "IT_MANAGER", "AUDITOR"];
+  return allowed.includes(role) ? children : <Navigate to="/dashboard" replace />;
 }
 
 function AdminOnly({ children }) {
@@ -45,6 +53,7 @@ export default function App() {
         <Route path="documents" element={<Documents />} />
         <Route path="settings" element={<Settings />} />
         <Route path="admin/users" element={<AdminOnly><UserManagement /></AdminOnly>} />
+        <Route path="monitoring" element={<MonitoringAccess><Monitoring /></MonitoringAccess>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

@@ -9,6 +9,7 @@ from app.models.incident import Incident  # noqa: F401
 from app.models.incident_diagnosis import IncidentDiagnosis  # noqa: F401
 from app.models.approval_request import ApprovalRequest  # noqa: F401
 from app.models.audit_event import AuditEvent  # noqa: F401
+from app.models.agent_workflow import AgentWorkflow, AgentWorkflowStep, LLMUsage  # noqa: F401
 
 
 async def init_db() -> None:
@@ -25,6 +26,7 @@ async def init_db() -> None:
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS token_version INTEGER NOT NULL DEFAULT 0",
             "ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
             "ALTER TABLE users ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP",
+            "ALTER TABLE approval_requests ADD COLUMN IF NOT EXISTS workflow_id VARCHAR(64)",
         ]
         for statement in migrations:
             await connection.execute(text(statement))

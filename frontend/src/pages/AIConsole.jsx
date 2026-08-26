@@ -183,6 +183,16 @@ export default function AIConsole() {
                       {data.answer || "No answer returned."}
                     </div>
 
+                    {data.workflow_id && (
+                      <div className="workflow-chip">
+                        <span>Workflow</span>
+                        <strong>{data.workflow_id}</strong>
+                        {data.approval_id && (
+                          <span>Approval #{data.approval_id} · waiting for human approval</span>
+                        )}
+                      </div>
+                    )}
+
                     {data.diagnosis && (
                       <div className="source-card">
                         <div>

@@ -14,6 +14,7 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.documents import router as documents_router
 from app.api.v1.incidents import router as incidents_router
 from app.api.v1.rag import router as rag_router
+from app.api.v1.monitoring import router as monitoring_router
 from app.api.v1.users import router as users_router
 from app.api.routes.users import router as users_crud_router
 from app.db.init_db import init_db
@@ -176,6 +177,12 @@ app.include_router(
 # =========================================================
 # HEALTH
 # =========================================================
+
+app.include_router(
+    monitoring_router,
+    prefix="/api/v1/monitoring",
+    tags=["Monitoring"],
+)
 
 app.include_router(
     health_router,

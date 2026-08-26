@@ -15,13 +15,14 @@ class IncidentDiagnosisService:
         self,
         db: AsyncSession,
     ) -> None:
-        self.llm = LLMService()
+        self.llm = LLMService(db)
 
         self.repository = IncidentDiagnosisRepository(
             db
         )
 
         self.db = db
+        self.workflow_id: str | None = None
 
     async def diagnose(
         self,
@@ -33,7 +34,10 @@ class IncidentDiagnosisService:
         environment: str | None,
         created_by: int | None,
         knowledge_context: str = "",
+        workflow_id: str | None = None,
     ) -> dict:
+
+        self.workflow_id = workflow_id
 
         prompt = f"""
 You are the WINGS Enterprise Incident Diagnosis Agent.
@@ -96,7 +100,12 @@ ENVIRONMENT:
 RELEVANT KNOWLEDGE BASE CONTEXT:
 {knowledge_context or "No additional knowledge-base context was retrieved."}
 """
-        raw_response = await self.llm.generate(prompt)
+        raw_response = await self.llm.generate(
+            prompt,
+            workflow_id=self.workflow_id,
+            user_id=created_by,
+            agent_name="incident_diagnosis_agent",
+        )
 
         try:
             result = json.loads(raw_response)

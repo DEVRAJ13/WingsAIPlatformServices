@@ -123,6 +123,7 @@ async def incident_agent(
         ),
         created_by=state.get("user_id"),
         knowledge_context=knowledge_context,
+        workflow_id=state.get("workflow_id"),
     )
 
     # ---------------------------------------------------------

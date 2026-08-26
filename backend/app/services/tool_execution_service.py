@@ -75,6 +75,13 @@ class ToolExecutionService:
         if approval_tool_name == "create_itsm_ticket":
             parameters.setdefault("provider", "jira")
 
+        if approval.workflow_id:
+            from app.services.workflow_service import WorkflowService
+            await WorkflowService(self.db).set_current_node(
+                approval.workflow_id,
+                "execution",
+            )
+
         try:
             result = await tool.execute(**parameters)
         except Exception as exc:
@@ -144,6 +151,13 @@ class ToolExecutionService:
                 "Tool execution succeeded, but the execution transaction "
                 "could not be committed."
             ) from exc
+
+        if approval.workflow_id:
+            from app.services.workflow_service import WorkflowService
+            await WorkflowService(self.db).finish(
+                approval.workflow_id,
+                status="COMPLETED",
+            )
 
         return {
             "approval_id": approval_id,
